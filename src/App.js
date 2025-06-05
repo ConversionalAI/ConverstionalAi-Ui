@@ -9,6 +9,8 @@ import Sidebar from "./components/SideBar";
 import ImageResults from "./components/ImageResults";
 import { supabase } from "./supabaseClient";
 import Auth from "./components/Auth";
+import AskQuestion from "./components/AskQuestion";
+import FileUploader from "./components/FileUploader"; // Import the new component
 
 function App() {
   const [user, setUser] = useState(null);
@@ -29,9 +31,9 @@ function App() {
 
     // Listen for auth state changes
     const { data: subscription } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setUser(session?.user || null);
-      }
+        (_event, session) => {
+          setUser(session?.user || null);
+        }
     );
 
     authListenerRef.current = subscription;
@@ -55,38 +57,46 @@ function App() {
   }
 
   return (
-    <div className={`App ${sidebarOpen ? "sidebar-open" : "sidebar-closed"}`}>
-      <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      <div className={`App ${sidebarOpen ? "sidebar-open" : "sidebar-closed"}`}>
+        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-      <div className="main-content">
-        <header className="App-header">
-          <div className="container">
-            <VoiceToText setText={setText} />
-            <SearchResults
-              setSearchResults={setSearchResults}
-              text={text}
-              searchResults={searchResults}
-            />
-          </div>
-
-          {loading && <p>Loading...</p>}
-
-          <div className="scraped-llm-wrapper">
-            <LLMResponse query={text} />
-            <div className="image-results-container">
-              <ImageResults query={text} />
+        <div className="main-content">
+          <header className="App-header">
+            <div className="container">
+              <VoiceToText setText={setText} />
+              <SearchResults
+                  setSearchResults={setSearchResults}
+                  text={text}
+                  searchResults={searchResults}
+              />
             </div>
-            <ScrapedResults scrapedData={scrapedData} />
-          </div>
 
-          <div className="logout-button-container">
-            <button className="logout-button" onClick={handleLogout}>
-              Logout
-            </button>
-          </div>
-        </header>
+            {loading && <p>Loading...</p>}
+
+            <div className="scraped-llm-wrapper">
+              <LLMResponse query={text} />
+
+              {/* Flex container for AskQuestion and FileUploader */}
+              <div className="ask-upload-container" style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
+                <AskQuestion />
+                <FileUploader />
+              </div>
+
+              <div className="image-results-container">
+                <ImageResults query={text} />
+              </div>
+
+              <ScrapedResults scrapedData={scrapedData} />
+            </div>
+
+            <div className="logout-button-container">
+              <button className="logout-button" onClick={handleLogout}>
+                Logout
+              </button>
+            </div>
+          </header>
+        </div>
       </div>
-    </div>
   );
 }
 

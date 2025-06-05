@@ -30,7 +30,7 @@ function ImageResults({ query }) {
 
   return (
     <div className="image-results">
-      <h3>Image Results</h3>
+      <h2>Image Results</h2>
       {loading && <p>Loading images...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
       <div className="image-grid">

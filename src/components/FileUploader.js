@@ -1,0 +1,86 @@
+import React, { useState } from "react";
+import axios from "axios";// Make sure to create this CSS file
+
+const FileUploader = ({ onUploadSuccess }) => {
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [fileName, setFileName] = useState("");
+    const [dragActive, setDragActive] = useState(false);
+
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            setSelectedFile(file);
+            setFileName(file.name);
+        }
+    };
+
+    const handleDrop = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        setDragActive(false);
+        const file = event.dataTransfer.files[0];
+        if (file) {
+            setSelectedFile(file);
+            setFileName(file.name);
+        }
+    };
+
+    const handleDragOver = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        setDragActive(true);
+    };
+
+    const handleDragLeave = () => {
+        setDragActive(false);
+    };
+
+    const uploadFileToBackend = async () => {
+        if (!selectedFile) {
+            console.error("No file selected!");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", selectedFile, fileName);
+
+        try {
+            const response = await axios.post("http://localhost:8000/content", formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+
+            console.log("Upload Response:", response.data);
+            if (onUploadSuccess) {
+                onUploadSuccess(response.data);
+            }
+        } catch (error) {
+            console.error("Error uploading file:", error);
+        }
+    };
+
+    return (
+        <div className="file-uploader-container">
+            <h2>Upload a File</h2>
+
+            <div
+                className={`drop-zone ${dragActive ? "active" : ""}`}
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+            >
+                <p>Drag & drop a file here, or click to select</p>
+                <input type="file" onChange={handleFileChange} />
+            </div>
+
+            {fileName && <p className="file-name">Selected File: {fileName}</p>}
+
+            <div className="button-group">
+                <button onClick={uploadFileToBackend} disabled={!selectedFile}>
+                    Upload
+                </button>
+            </div>
+        </div>
+    );
+};
+
+export default FileUploader;
