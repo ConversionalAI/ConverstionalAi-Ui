@@ -29,6 +29,10 @@ const VoiceToText = ({ setText }) => {
 
             console.log("Backend Response:", response.data);
             setText(response.data.transcription);
+
+            // Clear the audio blob after successful upload
+            setAudioBlob(null);
+            setConversationName("");
         } catch (error) {
             console.error("Error transcribing:", error);
         }
@@ -52,12 +56,13 @@ const VoiceToText = ({ setText }) => {
                     noiseSuppression: true,
                     echoCancellation: true,
                 }}
-                downloadOnSavePress
-                downloadFileExtension="wav"
+                downloadOnSavePress={false} // Disable local download
             />
 
             <div className="button-group">
-                <button onClick={sendAudioToBackend} disabled={!audioBlob}>Transcribe</button>
+                <button onClick={sendAudioToBackend} disabled={!audioBlob}>
+                    Transcribe
+                </button>
             </div>
         </div>
     );
