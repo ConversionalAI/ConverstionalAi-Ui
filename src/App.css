@@ -9,18 +9,15 @@
 body {
   background: linear-gradient(135deg, #e0f7fa, #fce4ec);
   color: #333;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   min-height: 100vh;
-  padding: 20px;
+  padding: 0;
   overflow-x: hidden;
+  overflow-y: auto;
 }
 
 /* Layout */
 .App {
   width: 100%;
-  max-width: 1400px;
   display: flex;
 }
 
@@ -108,7 +105,9 @@ body {
   margin-left: 250px;
   width: calc(100% - 250px);
   transition: margin-left 0.3s ease-in-out;
-  padding: 20px;
+  padding: 0;
+  height: 100vh;
+  overflow-y: auto;
 }
 .sidebar-closed .main-content {
   margin-left: 0;
@@ -121,7 +120,6 @@ body {
   justify-content: space-between;
   align-items: flex-start;
   width: 100%;
-  max-width: 1200px;
   gap: 30px;
   padding: 20px;
 }
@@ -139,7 +137,6 @@ body {
   margin: 10px 0;
 }
 
-/* LLM and Image Section */
 .scraped-llm-wrapper {
   display: flex;
   flex-direction: column;
@@ -166,7 +163,6 @@ body {
   min-height: 350px;
 }
 
-/* Inputs */
 .search-input,
 .input-box,
 input[type="text"],
@@ -190,7 +186,6 @@ textarea:focus {
   box-shadow: 0 0 5px rgba(0, 121, 107, 0.3);
 }
 
-/* Buttons */
 button {
   background: linear-gradient(135deg, #00796b, #004d40);
   color: white;
@@ -212,7 +207,6 @@ button:disabled {
   opacity: 0.6;
 }
 
-/* Image Results */
 .image-results-container {
   text-align: center;
 }
@@ -237,7 +231,6 @@ button:disabled {
   color: #333;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .sidebar {
     width: 200px;
@@ -256,43 +249,6 @@ button:disabled {
     width: calc(100% - 180px);
   }
 }
-
-
-/* App.css */
-.auth-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-}
-
-.auth-container input {
-  margin: 10px;
-  padding: 10px;
-  width: 250px;
-}
-
-.auth-container button {
-  padding: 10px;
-  width: 270px;
-  background-color: #0070f3;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-.auth-container p {
-  cursor: pointer;
-  color: #0070f3;
-}
-
-.error {
-  color: red;
-  font-size: 14px;
-}
-
-/* Add this in your App.css */
 
 .logout-button-container {
   text-align: center;
@@ -318,7 +274,6 @@ button:disabled {
   outline: none;
 }
 
-/* Container for AskQuestion and FileUploader */
 .ask-upload-container {
   display: flex;
   flex-wrap: wrap;
@@ -328,9 +283,8 @@ button:disabled {
   align-items: flex-start;
 }
 
-/* Optional: Add some styling to AskQuestion and FileUploader components */
 .ask-upload-container > * {
-  flex: 1 1 300px; /* Allows them to shrink and grow */
+  flex: 1 1 300px;
   min-width: 250px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   padding: 1rem;
@@ -338,7 +292,6 @@ button:disabled {
   border-radius: 8px;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .ask-upload-container {
     flex-direction: column;
@@ -416,4 +369,189 @@ button:disabled {
   background-color: #0056b3;
 }
 
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(120deg, #f0f4f8, #d9e2ec);
+  padding: 20px;
+}
 
+.auth-card {
+  background-color: #ffffff;
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.auth-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 25px;
+}
+
+.auth-card input {
+  width: 100%;
+  padding: 12px 15px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.auth-card input:focus {
+  border-color: #0077cc;
+}
+
+.auth-card button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  background-color: #0077cc;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.auth-card button:hover {
+  background-color: #005fa3;
+}
+
+.auth-card p {
+  margin-top: 15px;
+  color: #555;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.auth-card p:hover {
+  text-decoration: underline;
+}
+
+.error {
+  color: #e74c3c;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+
+/* Top header branding bar */
+.top-branding-bar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Logo in top bar */
+.top-logo {
+  height: 5px;
+}
+
+/* Title and tagline block */
+.top-title {
+  flex-grow: 1;
+  margin-left: 16px;
+}
+
+.top-title h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  color: #222;
+}
+
+.top-title p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+/* Main layout below top bar */
+.main-section {
+  padding: 24px;
+  overflow-y: auto;
+  max-height: calc(100vh - 80px);
+}
+
+/* Optional: Better logout button style */
+.logout-button {
+  background-color: #f44336;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.logout-button:hover {
+  background-color: #d32f2f;
+}
+
+.logo {
+  width: 200px;
+  height: auto;
+  margin-bottom: 8px;
+}
+
+/* Container */
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  gap: 30px;
+  padding: 20px; /* Already fine */
+  flex-wrap: wrap; /* Allows better responsiveness */
+}
+
+/* Sidebar */
+.sidebar {
+  padding: 20px; /* Unified padding instead of 20px 10px for balance */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch; /* Full-width items inside sidebar */
+}
+
+/* Sidebar links */
+.sidebar-link.file-link {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px; /* Slightly more padding for click area */
+}
+
+/* Main content */
+.main-content {
+  margin-left: 250px;
+  width: calc(100% - 250px);
+  transition: margin-left 0.3s ease-in-out;
+  padding: 20px; /* Added padding for breathing room */
+  height: 100vh;
+  overflow-y: auto;
+}
+
+/* Ask upload container */
+.ask-upload-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+  justify-content: flex-start;
+  align-items: stretch; /* Cards match height */
+}

@@ -24,14 +24,14 @@ const SearchResults = ({ setSearchResults, text, searchResults }) => {
 
   return (
     <div className="search-container">
-      <h2>Here are your facts</h2>
+      <h2>Edit your question before searching</h2>
 
       <textarea
         value={editableText}
         onChange={(e) => setEditableText(e.target.value)}
         rows={3}
         className="editable-search-text"
-        placeholder="Edit your question before searching"
+        placeholder="voice is converted to text"
       />
 
       <button onClick={searchGoogle} disabled={!editableText.trim()}>Search</button>

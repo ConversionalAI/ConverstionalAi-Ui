@@ -1,50 +1,65 @@
-// Auth.js
 import React, { useState } from 'react';
-import { supabase } from '../supabaseClient'; // Import the Supabase client
+import { supabase } from '../supabaseClient';
+import '../Login.css';
 
-const Auth = ({ setUser }) => {
+const Auth = () => {
+  const [isSignup, setIsSignup] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isSignUp, setIsSignUp] = useState(false); // Toggle between SignUp and SignIn mode
-  const [error, setError] = useState('');
 
   const handleAuth = async () => {
-    setError('');
+    if (!email || !password) {
+      alert('Please enter both email and password.');
+      return;
+    }
+
     try {
-      if (isSignUp) {
-        const { error: signUpError } = await supabase.auth.signUp({ email, password });
-        if (signUpError) throw signUpError;
+      let result;
+      if (isSignup) {
+        result = await supabase.auth.signUp({ email, password });
       } else {
-        const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
-        if (signInError) throw signInError;
+        result = await supabase.auth.signInWithPassword({ email, password });
       }
-    } catch (err) {
-      setError(err.message);
+
+      if (result.error) {
+        alert(result.error.message);
+      } 
+    } catch (error) {
+      console.error(error.message);
+      alert('Something went wrong.');
     }
   };
 
   return (
-    <div className="auth-container">
-      <h2>{isSignUp ? 'Sign Up' : 'Sign In'}</h2>
-      {error && <p className="error">{error}</p>}
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-      />
-      <button onClick={handleAuth}>{isSignUp ? 'Sign Up' : 'Sign In'}</button>
-      <p onClick={() => setIsSignUp(!isSignUp)}>
-        {isSignUp ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
-      </p>
+    <div className="auth-page">
+      <div className="auth-left">
+        <div className="auth-card">
+          <h2 className="auth-title">{isSignup ? 'Sign Up' : 'Login'}</h2>
+          <input
+            type="email"
+            placeholder="Email"
+            className="auth-input"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            className="auth-input"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button className="auth-button" onClick={handleAuth}>
+            {isSignup ? 'Sign Up' : 'Login'}
+          </button>
+          <div className="auth-toggle" onClick={() => setIsSignup(!isSignup)}>
+            {isSignup ? 'Already have an account? Login' : "Don't have an account? Sign Up"}
+          </div>
+        </div>
+      </div>
+      <div className="auth-right">
+        <img src="/login_background.png" alt="AI Coding" className="auth-image" />
+      </div>
     </div>
   );
 };
