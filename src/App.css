@@ -555,3 +555,121 @@ button:disabled {
   justify-content: flex-start;
   align-items: stretch; /* Cards match height */
 }
+
+/* === Layout refinements, responsiveness, and spacing fixes === */
+/* Ensure the app uses full height without forcing nested scrolls */
+body {
+  overflow-x: hidden;
+}
+
+.App {
+  min-height: 100vh;
+}
+
+/* Main content should breathe, avoid fixed viewport height to prevent double scroll */
+.main-content {
+  padding: 20px;
+  min-height: 100vh;
+  height: auto;
+  overflow: visible;
+}
+
+/* Two-up layout for voice/search with graceful wrap */
+.container {
+  flex-wrap: wrap;
+  padding: 20px;
+  gap: 24px;
+}
+.container > * {
+  flex: 1 1 360px;
+  min-width: 260px;
+}
+.voice-to-text-container,
+.search-container {
+  flex: 1 1 360px;
+}
+
+/* Inputs and textareas inside cards */
+.editable-search-text,
+.conversation-name-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+/* LLM response visual polish */
+.llm-button {
+  margin-top: 8px;
+}
+.llm-response-container {
+  min-height: 0; /* let content define height */
+}
+.llm-response-box {
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #fafafa;
+}
+.llm-response-box .placeholder {
+  color: #6b7280;
+}
+
+/* Ask a question card styles (from AskQuestion component) */
+.ask-container h2 { margin-bottom: 8px; }
+.question-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+.answer-display { margin-top: 10px; }
+.answer-box {
+  margin-top: 6px;
+  padding: 12px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+/* Scraped/image containers should not enforce large minimum heights on small screens */
+.scraped-results-container,
+.image-results-container {
+  min-height: 0;
+}
+
+/* Image grid tweaks for tighter fit */
+.image-grid { gap: 12px; }
+.image-item { width: 150px; }
+
+/* Sidebar overlay behavior on smaller screens */
+@media (max-width: 1024px) {
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+    padding: 16px;
+  }
+  .sidebar {
+    width: min(80vw, 320px);
+    z-index: 1100; /* above content */
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    gap: 16px;
+    padding: 16px;
+  }
+  .image-item { width: 44vw; max-width: 200px; }
+}
+
+@media (max-width: 576px) {
+  .container > * {
+    min-width: 100%;
+    flex-basis: 100%;
+  }
+  .image-item { width: 42vw; }
+}
