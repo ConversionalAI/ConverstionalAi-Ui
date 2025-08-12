@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { AudioRecorder } from "react-audio-voice-recorder";
-import axios from "axios";
 
 const VoiceToText = ({ setText }) => {
     const [audioBlob, setAudioBlob] = useState(null);
@@ -23,12 +22,15 @@ const VoiceToText = ({ setText }) => {
         formData.append("file", audioBlob, fileName);
 
         try {
-            const response = await axios.post("http://localhost:8000/transcribe/", formData, {
-                headers: { "Content-Type": "multipart/form-data" },
+            const res = await fetch("http://localhost:8000/transcribe/", {
+                method: "POST",
+                body: formData
             });
+            if (!res.ok) throw new Error(`Transcribe failed with ${res.status}`);
+            const data = await res.json();
 
-            console.log("Backend Response:", response.data);
-            setText(response.data.transcription);
+            console.log("Backend Response:", data);
+            setText(data.transcription);
 
             // Clear the audio blob after successful upload
             setAudioBlob(null);

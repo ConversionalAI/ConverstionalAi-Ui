@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 
 const SearchResults = ({ setSearchResults, text, searchResults }) => {
   const [editableText, setEditableText] = useState(text);
@@ -15,8 +14,10 @@ const SearchResults = ({ setSearchResults, text, searchResults }) => {
     }
 
     try {
-      const response = await axios.get(`http://localhost:8000/search?q=${encodeURIComponent(editableText)}`);
-      setSearchResults(response.data.results);
+      const res = await fetch(`http://localhost:8000/search?q=${encodeURIComponent(editableText)}`);
+      if (!res.ok) throw new Error(`Search failed with ${res.status}`);
+      const data = await res.json();
+      setSearchResults(data.results);
     } catch (error) {
       console.error("Error searching:", error);
     }
