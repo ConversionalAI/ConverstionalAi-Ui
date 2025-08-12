@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { API_BASE_URL } from "../config";
 
 function ImageResults({ query }) {
   const [images, setImages] = useState([]);
@@ -12,7 +13,7 @@ function ImageResults({ query }) {
       setLoading(true);
       setError("");
       try {
-        const res = await fetch(`http://localhost:8000/image-search?q=${encodeURIComponent(query)}`);
+        const res = await fetch(`${API_BASE_URL}/image-search?q=${encodeURIComponent(query)}`);
         if (!res.ok) throw new Error(`Image search failed with ${res.status}`);
         const data = await res.json();
         setImages(data.images || []);

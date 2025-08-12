@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../config';
 
 const UseScrapeData = (searchResults) => {
     const [scrapedData, setScrapedData] = useState([]);
@@ -12,7 +13,7 @@ const UseScrapeData = (searchResults) => {
             setLoading(true);
 
             try {
-                const res = await fetch("http://localhost:8000/scrape/", {
+                const res = await fetch(`${API_BASE_URL}/scrape/`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ pages: urls })

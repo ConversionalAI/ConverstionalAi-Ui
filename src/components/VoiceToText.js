@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { AudioRecorder } from "react-audio-voice-recorder";
+import { API_BASE_URL } from "../config";
 
 const VoiceToText = ({ setText }) => {
     const [audioBlob, setAudioBlob] = useState(null);
@@ -22,7 +23,7 @@ const VoiceToText = ({ setText }) => {
         formData.append("file", audioBlob, fileName);
 
         try {
-            const res = await fetch("http://localhost:8000/transcribe/", {
+            const res = await fetch(`${API_BASE_URL}/transcribe/`, {
                 method: "POST",
                 body: formData
             });

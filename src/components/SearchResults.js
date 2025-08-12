@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { API_BASE_URL } from "../config";
 
 const SearchResults = ({ setSearchResults, text, searchResults }) => {
   const [editableText, setEditableText] = useState(text);
@@ -14,7 +15,7 @@ const SearchResults = ({ setSearchResults, text, searchResults }) => {
     }
 
     try {
-      const res = await fetch(`http://localhost:8000/search?q=${encodeURIComponent(editableText)}`);
+      const res = await fetch(`${API_BASE_URL}/search?q=${encodeURIComponent(editableText)}`);
       if (!res.ok) throw new Error(`Search failed with ${res.status}`);
       const data = await res.json();
       setSearchResults(data.results);
