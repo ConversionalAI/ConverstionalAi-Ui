@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";// Optional styling file
 
 function ImageResults({ query }) {
   const [images, setImages] = useState([]);
@@ -13,10 +12,10 @@ function ImageResults({ query }) {
       setLoading(true);
       setError("");
       try {
-        const response = await axios.get("http://localhost:8000/image-search", {
-          params: { q: query },
-        });
-        setImages(response.data.images || []);
+        const res = await fetch(`http://localhost:8000/image-search?q=${encodeURIComponent(query)}`);
+        if (!res.ok) throw new Error(`Image search failed with ${res.status}`);
+        const data = await res.json();
+        setImages(data.images || []);
       } catch (err) {
         setError("Failed to fetch image results.");
         console.error("Image search error:", err);
@@ -37,7 +36,7 @@ function ImageResults({ query }) {
         {images.map((img, index) => (
           <div key={index} className="image-item">
             <a href={img.context_link} target="_blank" rel="noopener noreferrer">
-              <img src={img.image_link} alt={img.title} />
+              <img src={img.image_link} alt={img.title} loading="lazy" />
             </a>
             <p>{img.title}</p>
           </div>

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 
 const UseScrapeData = (searchResults) => {
     const [scrapedData, setScrapedData] = useState([]);
@@ -13,11 +12,14 @@ const UseScrapeData = (searchResults) => {
             setLoading(true);
 
             try {
-                const response = await axios.post("http://localhost:8000/scrape/",
-                    { pages: urls },
-                    { headers: { "Content-Type": "application/json" } }
-                );
-                setScrapedData(response.data.scraped_data);
+                const res = await fetch("http://localhost:8000/scrape/", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ pages: urls })
+                });
+                if (!res.ok) throw new Error(`Scrape failed with ${res.status}`);
+                const data = await res.json();
+                setScrapedData(data.scraped_data);
             } catch (error) {
                 console.error("Error scraping:", error);
             }

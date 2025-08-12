@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";// Make sure to create this CSS file
 
 const FileUploader = ({ onUploadSuccess }) => {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -45,13 +44,16 @@ const FileUploader = ({ onUploadSuccess }) => {
         formData.append("file", selectedFile, fileName);
 
         try {
-            const response = await axios.post("http://localhost:8000/content", formData, {
-                headers: { "Content-Type": "multipart/form-data" },
+            const res = await fetch("http://localhost:8000/content", {
+                method: "POST",
+                body: formData
             });
+            if (!res.ok) throw new Error(`Upload failed with ${res.status}`);
+            const data = await res.json();
 
-            console.log("Upload Response:", response.data);
+            console.log("Upload Response:", data);
             if (onUploadSuccess) {
-                onUploadSuccess(response.data);
+                onUploadSuccess(data);
             }
         } catch (error) {
             console.error("Error uploading file:", error);

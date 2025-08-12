@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const [history, setHistory] = useState([]);
@@ -7,8 +6,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   useEffect(() => {
     const fetchTranscriptions = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/transcriptions");
-        const transcriptions = response.data.transcriptions || [];
+        const res = await fetch("http://localhost:8000/transcriptions");
+        if (!res.ok) throw new Error(`History fetch failed with ${res.status}`);
+        const response = await res.json();
+        const transcriptions = response.transcriptions || [];
         setHistory(transcriptions);
       } catch (error) {
         console.error("Error fetching transcription history:", error);

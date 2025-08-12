@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 
 const AskQuestion = () => {
     const [question, setQuestion] = useState("");
@@ -14,8 +13,14 @@ const AskQuestion = () => {
 
         setLoading(true);
         try {
-            const response = await axios.post("http://localhost:8000/ask", { question });
-            setAnswer(response.data.answer);
+            const res = await fetch("http://localhost:8000/ask", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ question })
+            });
+            if (!res.ok) throw new Error(`Ask failed with ${res.status}`);
+            const data = await res.json();
+            setAnswer(data.answer);
         } catch (error) {
             console.error("Error asking question:", error);
             setAnswer("An error occurred while fetching the answer.");

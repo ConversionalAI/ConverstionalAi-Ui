@@ -1,16 +1,17 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Suspense } from "react";
 import "./App.css";
-import VoiceToText from "./components/VoiceToText";
-import SearchResults from "./components/SearchResults";
-import ScrapedResults from "./components/ScrapedResults";
 import useScrapeData from "./components/UseScrapeData";
-import LLMResponse from "./components/LLMResponse";
-import Sidebar from "./components/SideBar";
-import ImageResults from "./components/ImageResults";
 import { supabase } from "./supabaseClient";
-import Auth from "./components/Auth";
-import AskQuestion from "./components/AskQuestion";
-import FileUploader from "./components/FileUploader"; // Import the new component
+
+const VoiceToText = React.lazy(() => import("./components/VoiceToText"));
+const SearchResults = React.lazy(() => import("./components/SearchResults"));
+const ScrapedResults = React.lazy(() => import("./components/ScrapedResults"));
+const LLMResponse = React.lazy(() => import("./components/LLMResponse"));
+const Sidebar = React.lazy(() => import("./components/SideBar"));
+const ImageResults = React.lazy(() => import("./components/ImageResults"));
+const Auth = React.lazy(() => import("./components/Auth"));
+const AskQuestion = React.lazy(() => import("./components/AskQuestion"));
+const FileUploader = React.lazy(() => import("./components/FileUploader"));
 
 function App() {
   const [user, setUser] = useState(null);
@@ -31,9 +32,9 @@ function App() {
 
     // Listen for auth state changes
     const { data: subscription } = supabase.auth.onAuthStateChange(
-        (_event, session) => {
-          setUser(session?.user || null);
-        }
+      (_event, session) => {
+        setUser(session?.user || null);
+      }
     );
 
     authListenerRef.current = subscription;
@@ -53,30 +54,38 @@ function App() {
   };
 
   if (!user) {
-    return <Auth setUser={setUser} />;
+    return (
+      <Suspense fallback={<div>Loading...</div>}>
+        <Auth setUser={setUser} />
+      </Suspense>
+    );
   }
 
   return (
-      <div className={`App ${sidebarOpen ? "sidebar-open" : "sidebar-closed"}`}>
+    <div className={`App ${sidebarOpen ? "sidebar-open" : "sidebar-closed"}`}>
+      <Suspense fallback={<div />}> 
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      </Suspense>
 
-        <div className="main-content">
-          <header className="App-header">
-            <div className="container">
+      <div className="main-content">
+        <header className="App-header">
+          <div className="container">
+            <Suspense fallback={<div />}> 
               <VoiceToText setText={setText} />
               <SearchResults
-                  setSearchResults={setSearchResults}
-                  text={text}
-                  searchResults={searchResults}
+                setSearchResults={setSearchResults}
+                text={text}
+                searchResults={searchResults}
               />
-            </div>
+            </Suspense>
+          </div>
 
-            {loading && <p>Loading...</p>}
+          {loading && <p>Loading...</p>}
 
-            <div className="scraped-llm-wrapper">
+          <div className="scraped-llm-wrapper">
+            <Suspense fallback={<div />}> 
               <LLMResponse query={text} />
 
-              {/* Flex container for AskQuestion and FileUploader */}
               <div className="ask-upload-container" style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
                 <AskQuestion />
                 <FileUploader />
@@ -87,16 +96,17 @@ function App() {
               </div>
 
               <ScrapedResults scrapedData={scrapedData} />
-            </div>
+            </Suspense>
+          </div>
 
-            <div className="logout-button-container">
-              <button className="logout-button" onClick={handleLogout}>
-                Logout
-              </button>
-            </div>
-          </header>
-        </div>
+          <div className="logout-button-container">
+            <button className="logout-button" onClick={handleLogout}>
+              Logout
+            </button>
+          </div>
+        </header>
       </div>
+    </div>
   );
 }
 
