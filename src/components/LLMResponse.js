@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { API_BASE_URL } from "../config";
 
 const LLMResponse = ({ query }) => {
     const [response, setResponse] = useState("");
@@ -12,7 +13,7 @@ const LLMResponse = ({ query }) => {
 
         setLoading(true);
         try {
-            const res = await fetch("http://localhost:8000/llm/", {
+            const res = await fetch(`${API_BASE_URL}/llm/`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ prompt: query })  // Ensure 'prompt' matches backend

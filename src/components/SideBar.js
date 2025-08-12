@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { API_BASE_URL } from "../config";
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const [history, setHistory] = useState([]);
@@ -6,7 +7,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   useEffect(() => {
     const fetchTranscriptions = async () => {
       try {
-        const res = await fetch("http://localhost:8000/transcriptions");
+        const res = await fetch(`${API_BASE_URL}/transcriptions`);
         if (!res.ok) throw new Error(`History fetch failed with ${res.status}`);
         const response = await res.json();
         const transcriptions = response.transcriptions || [];

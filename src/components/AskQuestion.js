@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { API_BASE_URL } from "../config";
 
 const AskQuestion = () => {
     const [question, setQuestion] = useState("");
@@ -13,7 +14,7 @@ const AskQuestion = () => {
 
         setLoading(true);
         try {
-            const res = await fetch("http://localhost:8000/ask", {
+            const res = await fetch(`${API_BASE_URL}/ask`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ question })

@@ -31,7 +31,7 @@ function App() {
     });
 
     // Listen for auth state changes
-    const { data: subscription } = supabase.auth.onAuthStateChange(
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setUser(session?.user || null);
       }
@@ -41,9 +41,7 @@ function App() {
 
     // Clean up listener on unmount
     return () => {
-      if (authListenerRef.current?.unsubscribe) {
-        authListenerRef.current.unsubscribe();
-      }
+      subscription?.unsubscribe?.();
     };
   }, []);
 

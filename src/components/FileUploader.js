@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { API_BASE_URL } from "../config";
 
 const FileUploader = ({ onUploadSuccess }) => {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -44,7 +45,7 @@ const FileUploader = ({ onUploadSuccess }) => {
         formData.append("file", selectedFile, fileName);
 
         try {
-            const res = await fetch("http://localhost:8000/content", {
+            const res = await fetch(`${API_BASE_URL}/content`, {
                 method: "POST",
                 body: formData
             });
