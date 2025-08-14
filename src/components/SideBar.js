@@ -46,13 +46,20 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             <h3>Conversation History</h3>
             <ul className="conversation-history">
               {history.length > 0 ? (
-                history.map((item, index) => (
-                  <li key={index}>
-                    <button className="sidebar-link file-link">
-                      {item.filename || `Untitled ${index + 1}`}
-                    </button>
-                  </li>
-                ))
+                history.map((item, index) => {
+                  // Remove .wav extension from filename for display
+                  const displayName = item.filename 
+                    ? item.filename.replace(/\.wav$/i, '') 
+                    : `Untitled ${index + 1}`;
+                  
+                  return (
+                    <li key={index}>
+                      <button className="sidebar-link file-link">
+                        {displayName}
+                      </button>
+                    </li>
+                  );
+                })
               ) : (
                 <li>No history found</li>
               )}

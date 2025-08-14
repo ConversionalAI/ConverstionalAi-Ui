@@ -6,6 +6,12 @@
   font-family: 'CoFo Sans', sans-serif;
 }
 
+html {
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
 body {
   background: linear-gradient(135deg, #e0f7fa, #fce4ec);
   color: #333;
@@ -13,12 +19,15 @@ body {
   padding: 0;
   overflow-x: hidden;
   overflow-y: auto;
+  height: 100%;
 }
 
 /* Layout */
 .App {
   width: 100%;
   display: flex;
+  min-height: 100vh;
+  overflow: visible;
 }
 
 .sidebar {
@@ -107,9 +116,18 @@ body {
   margin-left: 250px;
   width: calc(100% - 250px);
   transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
-  padding: 0;
-  height: 100vh;
+  padding: 15px;
+  min-height: 100vh;
+  height: auto;
   overflow-y: auto;
+  position: relative;
+}
+
+/* App Header - Remove header styling that blocks scrolling */
+.App-header {
+  width: 100%;
+  height: auto;
+  overflow: visible;
 }
 
 .sidebar-closed .main-content {
@@ -124,12 +142,13 @@ body {
   justify-content: space-between;
   align-items: flex-start;
   width: 100%;
-  gap: 30px;
-  padding: 20px;
+  gap: 20px;
+  padding: 0;
+  flex-wrap: wrap;
 }
 
 .sidebar-closed .container {
-  padding-top: 20px;
+  padding-top: 0;
 }
 
 .voice-to-text-container,
@@ -141,22 +160,25 @@ body {
   border-radius: 12px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
   border-top: 5px solid #00796b;
-  padding: 25px;
-  margin: 10px 0;
+  padding: 20px;
+  margin: 5px 0;
 }
 
 .scraped-llm-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
   width: 100%;
+  overflow: visible;
 }
+
 .llm-response-container {
   width: 100%;
   min-height: 400px;
   text-align: left;
   overflow-y: auto;
 }
+
 .llm-response-content {
   overflow-y: auto;
   padding-right: 10px;
@@ -168,7 +190,7 @@ body {
 .image-results-container {
   width: 100%;
   text-align: center;
-  min-height: 350px;
+  min-height: 0;
 }
 
 .search-input,
@@ -186,6 +208,7 @@ textarea {
   resize: none;
   outline: none;
 }
+
 .search-input:focus,
 .input-box:focus,
 input[type="text"]:focus,
@@ -206,9 +229,11 @@ button {
   transition: all 0.3s ease;
   margin: 5px 0;
 }
+
 button:hover {
   background: linear-gradient(135deg, #004d40, #00251a);
 }
+
 button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
@@ -218,6 +243,7 @@ button:disabled {
 .image-results-container {
   text-align: center;
 }
+
 .image-grid {
   display: flex;
   flex-wrap: wrap;
@@ -225,37 +251,21 @@ button:disabled {
   gap: 15px;
   margin-top: 1rem;
 }
+
 .image-item {
   width: 160px;
 }
+
 .image-item img {
   width: 100%;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
+
 .image-title {
   font-size: 0.9rem;
   margin-top: 5px;
   color: #333;
-}
-
-@media (max-width: 768px) {
-  .sidebar {
-    width: 200px;
-  }
-  .main-content {
-    margin-left: 200px;
-    width: calc(100% - 200px);
-  }
-}
-@media (max-width: 576px) {
-  .sidebar {
-    width: 180px;
-  }
-  .main-content {
-    margin-left: 180px;
-    width: calc(100% - 180px);
-  }
 }
 
 .logout-button-container {
@@ -298,12 +308,6 @@ button:disabled {
   padding: 1rem;
   background-color: #ffffff;
   border-radius: 8px;
-}
-
-@media (max-width: 768px) {
-  .ask-upload-container {
-    flex-direction: column;
-  }
 }
 
 .file-uploader-container {
@@ -453,150 +457,6 @@ button:disabled {
   margin-bottom: 10px;
 }
 
-/* Top header branding bar */
-.top-branding-bar {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 24px;
-  background-color: #ffffff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-}
-
-/* Logo in top bar */
-.top-logo {
-  height: 5px;
-}
-
-/* Title and tagline block */
-.top-title {
-  flex-grow: 1;
-  margin-left: 16px;
-}
-
-.top-title h1 {
-  margin: 0;
-  font-size: 1.8rem;
-  color: #222;
-}
-
-.top-title p {
-  margin: 0;
-  font-size: 0.95rem;
-  color: #555;
-}
-
-/* Main layout below top bar */
-.main-section {
-  padding: 24px;
-  overflow-y: auto;
-  max-height: calc(100vh - 80px);
-}
-
-/* Optional: Better logout button style */
-.logout-button {
-  background-color: #f44336;
-  color: white;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.logout-button:hover {
-  background-color: #d32f2f;
-}
-
-.logo {
-  width: 200px;
-  height: auto;
-  margin-bottom: 8px;
-}
-
-/* Container */
-.container {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  width: 100%;
-  gap: 30px;
-  padding: 20px; /* Already fine */
-  flex-wrap: wrap; /* Allows better responsiveness */
-}
-
-/* Sidebar */
-.sidebar {
-  padding: 20px; /* Unified padding instead of 20px 10px for balance */
-  display: flex;
-  flex-direction: column;
-  align-items: stretch; /* Full-width items inside sidebar */
-}
-
-/* Sidebar links */
-.sidebar-link.file-link {
-  display: flex;
-  align-items: center;
-  padding: 10px 15px; /* Slightly more padding for click area */
-}
-
-/* Main content */
-.main-content {
-  margin-left: 250px;
-  width: calc(100% - 250px);
-  transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
-  padding: 20px; /* Added padding for breathing room */
-  height: 100vh;
-  overflow-y: auto;
-}
-
-/* Ask upload container */
-.ask-upload-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 1rem;
-  justify-content: flex-start;
-  align-items: stretch; /* Cards match height */
-}
-
-/* === Layout refinements, responsiveness, and spacing fixes === */
-/* Ensure the app uses full height without forcing nested scrolls */
-body {
-  overflow-x: hidden;
-}
-
-.App {
-  min-height: 100vh;
-}
-
-/* Main content should breathe, avoid fixed viewport height to prevent double scroll */
-.main-content {
-  padding: 20px;
-  min-height: 100vh;
-  height: auto;
-  overflow: visible;
-}
-
-/* Two-up layout for voice/search with graceful wrap */
-.container {
-  flex-wrap: wrap;
-  padding: 20px;
-  gap: 24px;
-}
-.container > * {
-  flex: 1 1 360px;
-  min-width: 260px;
-}
-.voice-to-text-container,
-.search-container {
-  flex: 1 1 360px;
-}
-
 /* Inputs and textareas inside cards */
 .editable-search-text,
 .conversation-name-input {
@@ -611,9 +471,7 @@ body {
 .llm-button {
   margin-top: 8px;
 }
-.llm-response-container {
-  min-height: 0; /* let content define height */
-}
+
 .llm-response-box {
   margin-top: 12px;
   padding: 14px;
@@ -621,12 +479,16 @@ body {
   border: 1px solid #e5e7eb;
   background: #fafafa;
 }
+
 .llm-response-box .placeholder {
   color: #6b7280;
 }
 
-/* Ask a question card styles (from AskQuestion component) */
-.ask-container h2 { margin-bottom: 8px; }
+/* Ask a question card styles */
+.ask-container h2 { 
+  margin-bottom: 8px; 
+}
+
 .question-input {
   width: 100%;
   padding: 12px 14px;
@@ -634,7 +496,11 @@ body {
   border-radius: 8px;
   font-size: 1rem;
 }
-.answer-display { margin-top: 10px; }
+
+.answer-display { 
+  margin-top: 10px; 
+}
+
 .answer-box {
   margin-top: 6px;
   padding: 12px;
@@ -643,17 +509,16 @@ body {
   border-radius: 8px;
 }
 
-/* Scraped/image containers should not enforce large minimum heights on small screens */
-.scraped-results-container,
-.image-results-container {
-  min-height: 0;
+/* Image grid tweaks for tighter fit */
+.image-grid { 
+  gap: 12px; 
 }
 
-/* Image grid tweaks for tighter fit */
-.image-grid { gap: 12px; }
-.image-item { width: 150px; }
+.image-item { 
+  width: 150px; 
+}
 
-/* Sidebar overlay behavior on smaller screens */
+/* Responsive Design */
 @media (max-width: 1024px) {
   .main-content {
     margin-left: 0 !important;
@@ -665,22 +530,44 @@ body {
   }
   .sidebar {
     width: min(80vw, 320px);
-    z-index: 1100; /* above content */
+    z-index: 1100;
   }
 }
 
 @media (max-width: 768px) {
+  .sidebar {
+    width: 200px;
+  }
+  .main-content {
+    margin-left: 200px;
+    width: calc(100% - 200px);
+  }
   .container {
     gap: 16px;
-    padding: 16px;
+    padding: 0;
   }
-  .image-item { width: 44vw; max-width: 200px; }
+  .ask-upload-container {
+    flex-direction: column;
+  }
+  .image-item { 
+    width: 44vw; 
+    max-width: 200px; 
+  }
 }
 
 @media (max-width: 576px) {
+  .sidebar {
+    width: 180px;
+  }
+  .main-content {
+    margin-left: 180px;
+    width: calc(100% - 180px);
+  }
   .container > * {
     min-width: 100%;
     flex-basis: 100%;
   }
-  .image-item { width: 42vw; }
+  .image-item { 
+    width: 42vw; 
+  }
 }
