@@ -4,27 +4,35 @@ const ScrapedResults = ({ scrapedData }) => {
     if (!scrapedData || scrapedData.length === 0) {
         return (
             <div className="scraped-results-container">
-                <h2>Scraped Data</h2>
+                <h2>Results from the Web</h2>
                 <p>No scraped data available.</p>
             </div>
         );
     }
 
     return (
-        <>
-            {scrapedData.map((item, index) => (
-                <div key={index} className="scraped-results-container">
-                    <h2>Scraped Result {index + 1}</h2>
-                    <div className="scraped-results">
-                        <ul style={{ maxHeight: '300px', overflowY: 'auto' }}>
-                            <li style={{ wordWrap: 'break-word' }}>
-                                <strong>{item.url}</strong>: {item.summary}
-                            </li>
-                        </ul>
+        <div className="scraped-results-container">
+            <h2>Results from the Web</h2>
+            <div className="scraped-results-grid">
+                {scrapedData.map((item, index) => (
+                    <div key={index} className="scraped-result-item">
+                        <div className="result-content">
+                            <p style={{ wordWrap: 'break-word', marginBottom: '10px' }}>
+                                {item.summary}
+                            </p>
+                            <a 
+                                href={item.url} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="reference-link"
+                            >
+                                (Reference Link)
+                            </a>
+                        </div>
                     </div>
-                </div>
-            ))}
-        </>
+                ))}
+            </div>
+        </div>
     );
 };
 

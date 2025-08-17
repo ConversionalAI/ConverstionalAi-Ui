@@ -28,21 +28,61 @@ function ImageResults({ query }) {
     fetchImages();
   }, [query]);
 
+  const handleImageError = (e) => {
+    e.target.style.display = 'none';
+    e.target.nextElementSibling.style.display = 'block';
+  };
+
+  if (!query) {
+    return null;
+  }
+
   return (
     <div className="image-results">
-      <h2>Image Results</h2>
-      {loading && <p>Loading images...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <div className="image-grid">
-        {images.map((img, index) => (
-          <div key={index} className="image-item">
-            <a href={img.context_link} target="_blank" rel="noopener noreferrer">
-              <img src={img.image_link} alt={img.title} loading="lazy" />
+      <h2>Image Results for: "{query}"</h2>
+      
+      {loading && (
+        <div className="loading-container">
+          <p>Loading images...</p>
+        </div>
+      )}
+      
+      {error && (
+        <div className="error-container">
+          <p style={{ color: "red" }}>{error}</p>
+        </div>
+      )}
+      
+      {!loading && !error && images.length === 0 && (
+        <div className="no-results">
+          <p>No images found for your search.</p>
+        </div>
+      )}
+      
+      {!loading && !error && images.length > 0 && (
+        <div className="image-grid">
+          {images.map((img, index) => (
+            <a 
+              key={index}
+              href={img.context_link} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              title={img.title}
+              className="image-item"
+            >
+              <img 
+                src={img.image_link} 
+                alt={img.title || `Image ${index + 1}`} 
+                loading="lazy"
+                onError={handleImageError}
+              />
+              <div className="image-fallback" style={{ display: 'none' }}>
+                <span>Image not available</span>
+              </div>
             </a>
-            <p>{img.title}</p>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
