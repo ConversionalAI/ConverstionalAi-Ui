@@ -17,9 +17,6 @@ const ScrapedResults = ({ scrapedData }) => {
                 {scrapedData.map((item, index) => (
                     <div key={index} className="scraped-result-item">
                         <div className="result-content">
-                            <p style={{ wordWrap: 'break-word', marginBottom: '10px' }}>
-                                {item.summary}
-                            </p>
                             <a 
                                 href={item.url} 
                                 target="_blank" 
@@ -28,6 +25,10 @@ const ScrapedResults = ({ scrapedData }) => {
                             >
                                 (Reference Link)
                             </a>
+                            <br></br>
+                            <p style={{ wordWrap: 'break-word', marginBottom: '10px' }}>
+                                {item.summary}
+                            </p>
                         </div>
                     </div>
                 ))}
