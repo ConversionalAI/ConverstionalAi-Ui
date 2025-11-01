@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { API_BASE_URL } from "../config";
+import { supabase } from "../supabaseClient";
 
 const AskQuestion = () => {
     const [question, setQuestion] = useState("");
@@ -14,10 +15,13 @@ const AskQuestion = () => {
 
         setLoading(true);
         try {
+            const { data: userData } = await supabase.auth.getUser();
+            const user_id = userData?.user?.id || null;
+
             const res = await fetch(`${API_BASE_URL}/ask`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ question })
+                body: JSON.stringify({ question, user_id })
             });
             if (!res.ok) throw new Error(`Ask failed with ${res.status}`);
             const data = await res.json();

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { API_BASE_URL } from "../config";
+import { supabase } from "../supabaseClient";
 
 const FileUploader = ({ onUploadSuccess }) => {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -43,6 +44,13 @@ const FileUploader = ({ onUploadSuccess }) => {
 
         const formData = new FormData();
         formData.append("file", selectedFile, fileName);
+        try {
+            const { data: userData } = await supabase.auth.getUser();
+            const user_id = userData?.user?.id || "";
+            formData.append("user_id", user_id);
+        } catch (_) {
+            // ignore if unable to fetch user
+        }
 
         try {
             const res = await fetch(`${API_BASE_URL}/content`, {

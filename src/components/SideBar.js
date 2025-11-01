@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { API_BASE_URL } from "../config";
+import { supabase } from "../supabaseClient";
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const [history, setHistory] = useState([]);
+  const [chats, setChats] = useState([]);
 
   useEffect(() => {
     const fetchTranscriptions = async () => {
@@ -17,8 +19,23 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       }
     };
 
+    const fetchChats = async () => {
+      try {
+        const { data: userData } = await supabase.auth.getUser();
+        const user_id = userData?.user?.id;
+        if (!user_id) return;
+        const res = await fetch(`${API_BASE_URL}/chats?user_id=${encodeURIComponent(user_id)}`);
+        if (!res.ok) throw new Error(`Chats fetch failed with ${res.status}`);
+        const response = await res.json();
+        setChats(response.chats || []);
+      } catch (error) {
+        console.error("Error fetching chats:", error);
+      }
+    };
+
     if (sidebarOpen) {
       fetchTranscriptions(); // Only fetch when sidebar is opened
+      fetchChats();
     }
   }, [sidebarOpen]);
 
@@ -62,6 +79,23 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                 })
               ) : (
                 <li>No history found</li>
+              )}
+            </ul>
+          </div>
+
+          <div style={{ marginTop: "20px" }}>
+            <h3>Chat History</h3>
+            <ul className="conversation-history">
+              {chats.length > 0 ? (
+                chats.map((c, idx) => (
+                  <li key={idx}>
+                    <button className="sidebar-link file-link" title={c.answer}>
+                      {c.question?.slice(0, 40) || "(no question)"}
+                    </button>
+                  </li>
+                ))
+              ) : (
+                <li>No chats yet</li>
               )}
             </ul>
           </div>

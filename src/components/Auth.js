@@ -2,51 +2,29 @@ import React, { useState } from 'react';
 import { supabase } from '../supabaseClient';
 import '../App.css';
 
+// Simple Auth screen that uses Supabase OAuth (Google) only.
+// This removes the previous email/password flow and replaces it with a
+// "Sign in with Google" button. App listens to auth state changes and
+// will update the user after the redirect/popup completes.
 const Auth = () => {
-  const [isSignup, setIsSignup] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState(''); // for success/info messages
-  const [errorMsg, setErrorMsg] = useState(''); // for error messages
+  const [errorMsg, setErrorMsg] = useState('');
+  const [infoMsg, setInfoMsg] = useState('');
 
-  const handleAuth = async () => {
-    setMessage('');
+  const handleGoogleSignIn = async () => {
     setErrorMsg('');
-
-    if (!email || !password) {
-      setErrorMsg('Please enter both email and password.');
-      return;
-    }
+    setInfoMsg('');
 
     try {
-      let result;
-      if (isSignup) {
-        result = await supabase.auth.signUp({ email, password });
-
-        if (result.error) {
-          if (result.error.message.includes('already registered')) {
-            setErrorMsg('This email is already registered. Please log in instead.');
-          } else {
-            setErrorMsg(result.error.message);
-          }
-          return;
-        }
-
-        // Supabase requires email confirmation if enabled
-        setMessage('Sign-up successful! Please check your email inbox for a confirmation link to verify your account.');
+      // Initiates the OAuth flow. This will redirect the browser to Google's
+      // consent screen unless you configure a popup flow in Supabase settings.
+      const { error } = await supabase.auth.signInWithOAuth({ provider: 'google' });
+      if (error) {
+        setErrorMsg(error.message || 'Failed to start Google sign-in.');
       } else {
-        result = await supabase.auth.signInWithPassword({ email, password });
-
-        if (result.error) {
-          setErrorMsg(result.error.message);
-          return;
-        }
-
-        setMessage('Login successful!');
+        setInfoMsg('Redirecting to Google for authentication...');
       }
-    } catch (error) {
-      console.error(error.message);
-      setErrorMsg('Something went wrong.');
+    } catch (err) {
+      setErrorMsg(err?.message || 'Unexpected error while starting sign-in.');
     }
   };
 
@@ -54,33 +32,18 @@ const Auth = () => {
     <div className="auth-page">
       <div className="auth-left">
         <div className="auth-card">
-          <h2 className="auth-title">{isSignup ? 'Sign Up' : 'Login'}</h2>
+          <h2 className="auth-title">Sign in</h2>
 
           {errorMsg && <p className="auth-error">{errorMsg}</p>}
-          {message && <p className="auth-message">{message}</p>}
+          {infoMsg && <p className="auth-message">{infoMsg}</p>}
 
-          <input
-            type="email"
-            placeholder="Email"
-            className="auth-input"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className="auth-input"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-
-          <button className="auth-button" onClick={handleAuth}>
-            {isSignup ? 'Sign Up' : 'Login'}
+          <button className="auth-button" onClick={handleGoogleSignIn}>
+            Sign in with Google
           </button>
 
-          <div className="auth-toggle" onClick={() => setIsSignup(!isSignup)}>
-            {isSignup ? 'Already have an account? Login' : "Don't have an account? Sign Up"}
-          </div>
+          <p style={{ marginTop: '1rem', color: '#666' }}>
+            You'll be redirected to Google to sign in.
+          </p>
         </div>
       </div>
 

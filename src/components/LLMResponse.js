@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { API_BASE_URL } from "../config";
+import { supabase } from "../supabaseClient";
 
 const LLMResponse = ({ query }) => {
     const [response, setResponse] = useState("");
@@ -13,10 +14,13 @@ const LLMResponse = ({ query }) => {
 
         setLoading(true);
         try {
+            const { data: userData } = await supabase.auth.getUser();
+            const user_id = userData?.user?.id || null;
+
             const res = await fetch(`${API_BASE_URL}/llm/`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ prompt: query })  // Ensure 'prompt' matches backend
+                body: JSON.stringify({ prompt: query, user_id })  // Ensure keys match backend
             });
 
             const data = await res.json();
